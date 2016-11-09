@@ -11,9 +11,9 @@ export default class Layout extends React.Component{
     render(){
         return (
             <div className={this.props.wraperClass}>
-                <Header />
-                <PageContent />
-                <Footer />
+                <Header className={this.props.headerClass}/>
+                <PageContent className={this.props.contentClass}/>
+                <Footer className={this.props.footerClass}/>
             </div>
         );
     }

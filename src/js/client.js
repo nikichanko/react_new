@@ -3,5 +3,5 @@ import ReactDOM from "react-dom";
 
 import Layout from "./components/Layout";
 
-const app = document.getElementsByTagName('body')[0];
-ReactDOM.render(<Layout wraperClass="wrapper-div" />, app);
+const app = document.getElementById('root');
+ReactDOM.render(<Layout wraperClass="wrapper-div" headerClass="header" contentClass="page-content" footerClass="footer"/>, app);
