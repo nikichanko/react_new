@@ -1,5 +1,7 @@
 import React from "react";
 
+require('../../../css/form.css');
+
 export default class Form extends React.Component{
     constructor(props){
         super(props);
@@ -12,58 +14,40 @@ export default class Form extends React.Component{
     }
 
     handleValidation(event) {
-        let value = event.target.value;
+        const value = event.target.value;
+       // console.log(value.length)
         let field_id = event.target.id;
+        if(!this.refs.hasOwnProperty(field_id))
+            return;
         let field = this.refs[field_id];
-
         let validation_regex = field.props.validation_regex;
         if(validation_regex === undefined) {
-           // return
+            // the filed has no validation so just return
+            return;
         }
-        //this field has validation
-            console.log(1);
+      //  console.log(styles);
+        //this field has validation so made it
+        var pattern = new RegExp(validation_regex);
+        if(!pattern.test(value)){
+            console.log('not valid');
                     let fields = this.state.fields_;
         fields.map(function(f, i){
             if(f.id === field_id){
-                fields[i].className = 'niki';
+                fields[i].className = 'notvalidated';
             }
-        });
-        console.log(fields);
+        });  
+        
+       // console.log(fields);
         this.setState({ fields_ : fields});
-    
+        }
 
-
-        //console.log(this.state);
-    //    let f_values = this.state.fields_values;
-       // let self_field = .getElementById(i);
-     //   console.log(self_field);
-      //  if(self_field.lenght)
-     //       f_values[i].value = self_field.value;
-     //   console.log(self_field.value);
-     // //  f_values[0].value = event.target.value;
-       // id = event.target.id;
-      //  console.log(event.target.id);
-      //   f_values[i].value = 
-   //     console.log(event.target.value);
-      //  feildss[i].value = 'niki';
-     //   this.setState({fields: feildss});
-       // console.log(1);
-       // console.log(event.target.value);
-//console.log(i);
-    //    let fields = this.state.fields;
-    //    console.log(fields[i]);
-     //   console.log(fields);
-    //    return;
-        //       fields[i].value +=  'niki';
-
-     //   this.setState({ fields_values : f_values});
     }
 
     FromfieldsBuild(){
         const self = this;
         return self.props.fields.map(function(input, i){
             if(input.type !== 'textarea')
-                return <Input key={input.id} id={input.id} type={input.type} name={input.name} 
+                return <Input key={input.id} id={input.id} type={input.type} name={input.name} placeholder={input.placeholder}
                             label={input.hasOwnProperty('label')?input.label:''}
                             validation_regex={input.hasOwnProperty('validation_regex')?input.validation_regex:''}
                             onCh={self.handleValidation}
@@ -93,7 +77,7 @@ class Textarea extends React.Component{
     render(){
         return(
             <div>
-                <textarea id={this.props.id} value={this.props.value} onChange={this.props.onCh}/>
+                <textarea id={this.props.id} onChange={this.props.onCh}/>
                 {this.props.validation_regex !== '' && (<div className={'error_'+this.props.id}></div>)}
             </div>
         )
@@ -107,7 +91,7 @@ class Input extends React.Component{
     render(){
         return(
             <div>
-                <input id={this.props.id} type={this.props.type} name={this.props.name} value={this.props.value} onChange={this.props.onCh} className={this.props.className}/>
+                <input id={this.props.id} type={this.props.type} name={this.props.name} onChange={this.props.onCh} className={this.props.className} placeholder={this.props.placeholder}/>
                 {this.props.label !== '' && (<label for={this.props.id}>{this.props.label}</label>)}
                 {this.props.validation_regex !== '' && (<div className={'error_'+this.props.id}></div>)}
             </div>

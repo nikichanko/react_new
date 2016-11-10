@@ -16,6 +16,11 @@ module.exports = [{
           presets: ['react', 'es2015', 'stage-0'],
           plugins: ['react-html-attrs', 'transform-decorators-legacy', 'transform-class-properties'],
         }
+      },
+      {
+        test: /\.s?css$/,
+        loaders: ["style", "css", "sass"],
+        include: path.join(__dirname,'src')
       }
     ]
   },
