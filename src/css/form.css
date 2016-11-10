@@ -1,3 +1,10 @@
 .notvalidated{
     border-color: red;
 }
+.error_input{
+    display: none;
+    color:red;
+}
+.error_input.active{
+    display: block;
+}

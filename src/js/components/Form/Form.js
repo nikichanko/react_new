@@ -7,9 +7,15 @@ export default class Form extends React.Component{
         super(props);
 
         this.state = {fields_: this.props.fields.map(function(field){
-            return {id: field.id, className:'forminput', classNameError: 'error_'+field.id}
+            return {id: field.id, className:'forminput', classNameError: 'error_input'}
         })};
         this.onChangeValidation = this.onChangeValidation.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+    }
+
+    onSubmit(event){
+        event.preventDefault();
+        
     }
 
     onChangeValidation(event) {
@@ -23,8 +29,10 @@ export default class Form extends React.Component{
             // the filed has no validation so just return
             return;
         }
-        //this field has validation so made it
+
+        //this field has validation so DO it
         let fields = this.state.fields_;
+        let self = this;
         fields.map(function(f, i){
             if(f.id === field_id){
                 let classN = f.className.split(' ');
@@ -48,10 +56,10 @@ export default class Form extends React.Component{
 
                 fields[i].className = classN.join(' ');
                 fields[i].classNameError = classNError.join(' ');
+                self.setState({ fields_ : fields});
                 return false;
             }
         });
-        this.setState({ fields_ : fields});
     }
 
     FromfieldsBuild(){
@@ -64,10 +72,17 @@ export default class Form extends React.Component{
                             onChange={self.onChangeValidation}
                             className={self.state.fields_[i].className}
                             classNameError={self.state.fields_[i].classNameError}
+                            errorValidation={input.validation_error}
                             ref={input.id}
                         />
             else
-                return <Textarea key={input.id} id={input.id} name={input.name} onChange={self.onChangeValidation} ref={input.id}
+                return <Textarea key={input.id} id={input.id} name={input.name} 
+                                    onChange={self.onChangeValidation} ref={input.id}
+                                    validation_regex={input.hasOwnProperty('validation_regex')?input.validation_regex:''}
+                                    className={self.state.fields_[i].className}
+                                    classNameError={self.state.fields_[i].classNameError}
+                                    errorValidation={input.validation_error}
+                                    ref={input.id}
                         />
         });
     }
@@ -75,7 +90,7 @@ export default class Form extends React.Component{
     render(){
         const fields = this.FromfieldsBuild();
         return(
-           <form action={this.props.action} method={this.props.method}>
+           <form action={this.props.action} method={this.props.method} onSubmit={this.onSubmit}>
                 {fields}
            </form>
         )
@@ -89,8 +104,8 @@ class Textarea extends React.Component{
     render(){
         return(
             <div>
-                <textarea id={this.props.id} onChange={this.props.onCh}/>
-                {this.props.validation_regex !== '' && (<div className={'error_'+this.props.id}></div>)}
+                <textarea id={this.props.id} onChange={this.props.onChange} className={this.props.className}/>
+                {this.props.validation_regex !== '' && (<div className={this.props.classNameError}>{this.props.errorValidation}</div>)}
             </div>
         )
     }
@@ -105,7 +120,7 @@ class Input extends React.Component{
             <div>
                 <input id={this.props.id} type={this.props.type} name={this.props.name} onChange={this.props.onChange} className={this.props.className} placeholder={this.props.placeholder}/>
                 {this.props.label !== '' && (<label for={this.props.id}>{this.props.label}</label>)}
-                {this.props.validation_regex !== '' && (<div className={this.props.classNameError}></div>)}
+                {this.props.validation_regex !== '' && (<div className={this.props.classNameError}>{this.props.errorValidation}</div>)}
             </div>
         )
     }
