@@ -4,16 +4,36 @@ export default class Form extends React.Component{
     constructor(props){
         super(props);
 
-    //    this.state = {fields_values: this.props.fields.map(function(field){
-     //       return {value:field.value}
-    //    })};
+        this.state = {fields_: this.props.fields.map(function(field){
+            return {id: field.id, className:''}
+        })};
 
        this.handleValidation = this.handleValidation.bind(this);
     }
 
     handleValidation(event) {
         let value = event.target.value;
-        console.log(value);
+        let field_id = event.target.id;
+        let field = this.refs[field_id];
+
+        let validation_regex = field.props.validation_regex;
+        if(validation_regex === undefined) {
+           // return
+        }
+        //this field has validation
+            console.log(1);
+                    let fields = this.state.fields_;
+        fields.map(function(f, i){
+            if(f.id === field_id){
+                fields[i].className = 'niki';
+            }
+        });
+        console.log(fields);
+        this.setState({ fields_ : fields});
+    
+
+
+        //console.log(this.state);
     //    let f_values = this.state.fields_values;
        // let self_field = .getElementById(i);
      //   console.log(self_field);
@@ -47,9 +67,11 @@ export default class Form extends React.Component{
                             label={input.hasOwnProperty('label')?input.label:''}
                             validation_regex={input.hasOwnProperty('validation_regex')?input.validation_regex:''}
                             onCh={self.handleValidation}
+                            className={self.state.fields_[i].className}
+                            ref={input.id}
                         />
             else
-                return <Textarea key={input.id} id={input.id} name={input.name} onCh={self.handleValidation}
+                return <Textarea key={input.id} id={input.id} name={input.name} onCh={self.handleValidation} ref={input.id}
                         />
         });
     }
@@ -85,7 +107,7 @@ class Input extends React.Component{
     render(){
         return(
             <div>
-                <input id={this.props.id} type={this.props.type} name={this.props.name} value={this.props.value} onChange={this.props.onCh}/>
+                <input id={this.props.id} type={this.props.type} name={this.props.name} value={this.props.value} onChange={this.props.onCh} className={this.props.className}/>
                 {this.props.label !== '' && (<label for={this.props.id}>{this.props.label}</label>)}
                 {this.props.validation_regex !== '' && (<div className={'error_'+this.props.id}></div>)}
             </div>
