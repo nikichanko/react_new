@@ -7,15 +7,13 @@ export default class Form extends React.Component{
         super(props);
 
         this.state = {fields_: this.props.fields.map(function(field){
-            return {id: field.id, className:''}
+            return {id: field.id, className:'forminput', classNameError: 'error_'+field.id}
         })};
-
-       this.handleValidation = this.handleValidation.bind(this);
+        this.onChangeValidation = this.onChangeValidation.bind(this);
     }
 
-    handleValidation(event) {
+    onChangeValidation(event) {
         const value = event.target.value;
-       // console.log(value.length)
         let field_id = event.target.id;
         if(!this.refs.hasOwnProperty(field_id))
             return;
@@ -25,22 +23,35 @@ export default class Form extends React.Component{
             // the filed has no validation so just return
             return;
         }
-      //  console.log(styles);
         //this field has validation so made it
-        var pattern = new RegExp(validation_regex);
-        if(!pattern.test(value)){
-            console.log('not valid');
-                    let fields = this.state.fields_;
+        let fields = this.state.fields_;
         fields.map(function(f, i){
             if(f.id === field_id){
-                fields[i].className = 'notvalidated';
-            }
-        });  
-        
-       // console.log(fields);
-        this.setState({ fields_ : fields});
-        }
+                let classN = f.className.split(' ');
+                let classNError = f.classNameError.split(' ');    
+                let pattern = new RegExp(validation_regex);
+                let validated = pattern.test(value);
 
+                if(!validated && classN.indexOf('notvalidated')===-1){
+                    classN.push('notvalidated');
+                }
+                else if(validated && classN.indexOf('notvalidated')!==-1){
+                    classN.splice(classN.indexOf('notvalidated'), 1);
+                }
+
+                if(!validated && classNError.indexOf('active')===-1){
+                    classNError.push('active');
+                }
+                else if(validated && classNError.indexOf('active')!==-1){
+                    classNError.splice(classNError.indexOf('active'), 1);
+                }
+
+                fields[i].className = classN.join(' ');
+                fields[i].classNameError = classNError.join(' ');
+                return false;
+            }
+        });
+        this.setState({ fields_ : fields});
     }
 
     FromfieldsBuild(){
@@ -50,12 +61,13 @@ export default class Form extends React.Component{
                 return <Input key={input.id} id={input.id} type={input.type} name={input.name} placeholder={input.placeholder}
                             label={input.hasOwnProperty('label')?input.label:''}
                             validation_regex={input.hasOwnProperty('validation_regex')?input.validation_regex:''}
-                            onCh={self.handleValidation}
+                            onChange={self.onChangeValidation}
                             className={self.state.fields_[i].className}
+                            classNameError={self.state.fields_[i].classNameError}
                             ref={input.id}
                         />
             else
-                return <Textarea key={input.id} id={input.id} name={input.name} onCh={self.handleValidation} ref={input.id}
+                return <Textarea key={input.id} id={input.id} name={input.name} onChange={self.onChangeValidation} ref={input.id}
                         />
         });
     }
@@ -91,9 +103,9 @@ class Input extends React.Component{
     render(){
         return(
             <div>
-                <input id={this.props.id} type={this.props.type} name={this.props.name} onChange={this.props.onCh} className={this.props.className} placeholder={this.props.placeholder}/>
+                <input id={this.props.id} type={this.props.type} name={this.props.name} onChange={this.props.onChange} className={this.props.className} placeholder={this.props.placeholder}/>
                 {this.props.label !== '' && (<label for={this.props.id}>{this.props.label}</label>)}
-                {this.props.validation_regex !== '' && (<div className={'error_'+this.props.id}></div>)}
+                {this.props.validation_regex !== '' && (<div className={this.props.classNameError}></div>)}
             </div>
         )
     }
