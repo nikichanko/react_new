@@ -15,7 +15,10 @@ export default class Form extends React.Component{
 
     onSubmit(event){
         event.preventDefault();
-        
+        let fields = this.props.fields;
+        fields.map(function(f, i){
+
+        });
     }
 
     onChangeValidation(event) {
