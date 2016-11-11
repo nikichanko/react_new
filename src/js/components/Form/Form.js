@@ -14,16 +14,23 @@ export default class Form extends React.Component{
     }
 
     onSubmit(event){
-        event.preventDefault();
         const props_fields = this.props.fields;
         const state_fields = this.state.state_fields;
         let self = this;
+        let not_validated_count = 0;
         state_fields.map(function(f, i){
+            let validation_regex = props_fields[i].validation_regex;
             if(validation_regex !== undefined) {
-                return self.getValidatedfield(f, props_fields[i].validation_regex);
+                var field = self.getValidatedfield(f, validation_regex);
+                if(!field.validated)
+                    not_validated_count++;
+                return field;
             }
         });
         this.setState({state_fields : state_fields});
+        if(not_validated_count>0){
+            event.preventDefault();
+        }
     }
 
     getValidatedfield(field, validation_regex){
