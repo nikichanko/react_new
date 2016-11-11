@@ -30,8 +30,7 @@ export default class Form extends React.Component{
         let classN = field.className.split(' ');
         let classNError = field.classNameError.split(' ');
         let pattern = new RegExp(validation_regex);
-        let value = field.value;
-        let validated = pattern.test(value);
+        let validated = pattern.test(field.value);
         if(!validated && classN.indexOf('notvalidated')===-1){
             classN.push('notvalidated');
         }
@@ -49,7 +48,6 @@ export default class Form extends React.Component{
         field.className = classN.join(' ');
         field.classNameError = classNError.join(' ');
         field.validated = validated;
-        field.value = value;
         return field;
     }
 
