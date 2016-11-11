@@ -6,22 +6,54 @@ export default class Form extends React.Component{
     constructor(props){
         super(props);
 
-        this.state = {fields_: this.props.fields.map(function(field){
-            return {id: field.id, className:'forminput', classNameError: 'error_input'}
+        this.state = {state_fields: this.props.fields.map(function(field){
+            return {id: field.id, className:'forminput', classNameError: 'error_input', value: field.value}
         })};
-        this.onChangeValidation = this.onChangeValidation.bind(this);
+        this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     }
 
     onSubmit(event){
         event.preventDefault();
-        let fields = this.props.fields;
-        fields.map(function(f, i){
-
+        const props_fields = this.props.fields;
+        const state_fields = this.state.state_fields;
+        let self = this;
+        state_fields.map(function(f, i){
+            if(validation_regex !== undefined) {
+                return self.getValidatedfield(f, props_fields[i].validation_regex);
+            }
         });
+        this.setState({state_fields : state_fields});
     }
 
-    onChangeValidation(event) {
+    getValidatedfield(field, validation_regex){
+        let classN = field.className.split(' ');
+        let classNError = field.classNameError.split(' ');
+        let pattern = new RegExp(validation_regex);
+        let value = field.value;
+        let validated = pattern.test(value);
+        if(!validated && classN.indexOf('notvalidated')===-1){
+            classN.push('notvalidated');
+        }
+        else if(validated && classN.indexOf('notvalidated')!==-1){
+            classN.splice(classN.indexOf('notvalidated'), 1);
+        }
+
+        if(!validated && classNError.indexOf('active')===-1){
+            classNError.push('active');
+        }
+        else if(validated && classNError.indexOf('active')!==-1){
+            classNError.splice(classNError.indexOf('active'), 1);
+        }
+
+        field.className = classN.join(' ');
+        field.classNameError = classNError.join(' ');
+        field.validated = validated;
+        field.value = value;
+        return field;
+    }
+
+    onChange(event) {
         const value = event.target.value;
         let field_id = event.target.id;
         if(!this.refs.hasOwnProperty(field_id))
@@ -34,35 +66,15 @@ export default class Form extends React.Component{
         }
 
         //this field has validation so DO it
-        let fields = this.state.fields_;
+        let state_fields = this.state.state_fields;
         let self = this;
-        fields.map(function(f, i){
+        state_fields.map(function(f, i){
             if(f.id === field_id){
-                let classN = f.className.split(' ');
-                let classNError = f.classNameError.split(' ');    
-                let pattern = new RegExp(validation_regex);
-                let validated = pattern.test(value);
-
-                if(!validated && classN.indexOf('notvalidated')===-1){
-                    classN.push('notvalidated');
-                }
-                else if(validated && classN.indexOf('notvalidated')!==-1){
-                    classN.splice(classN.indexOf('notvalidated'), 1);
-                }
-
-                if(!validated && classNError.indexOf('active')===-1){
-                    classNError.push('active');
-                }
-                else if(validated && classNError.indexOf('active')!==-1){
-                    classNError.splice(classNError.indexOf('active'), 1);
-                }
-
-                fields[i].className = classN.join(' ');
-                fields[i].classNameError = classNError.join(' ');
-                self.setState({ fields_ : fields});
-                return false;
+                f.value = value;
+                return self.getValidatedfield(f, validation_regex);
             }
         });
+        this.setState({ state_fields : state_fields});
     }
 
     FromfieldsBuild(){
@@ -72,20 +84,22 @@ export default class Form extends React.Component{
                 return <Input key={input.id} id={input.id} type={input.type} name={input.name} placeholder={input.placeholder}
                             label={input.hasOwnProperty('label')?input.label:''}
                             validation_regex={input.hasOwnProperty('validation_regex')?input.validation_regex:''}
-                            onChange={self.onChangeValidation}
-                            className={self.state.fields_[i].className}
-                            classNameError={self.state.fields_[i].classNameError}
+                            onChange={self.onChange}
+                            className={self.state.state_fields[i].className}
+                            classNameError={self.state.state_fields[i].classNameError}
                             errorValidation={input.validation_error}
                             ref={input.id}
+                            value={self.state.state_fields[i].value}
                         />
             else
                 return <Textarea key={input.id} id={input.id} name={input.name} 
-                                    onChange={self.onChangeValidation} ref={input.id}
+                                    onChange={self.onChange} ref={input.id}
                                     validation_regex={input.hasOwnProperty('validation_regex')?input.validation_regex:''}
-                                    className={self.state.fields_[i].className}
-                                    classNameError={self.state.fields_[i].classNameError}
+                                    className={self.state.state_fields[i].className}
+                                    classNameError={self.state.state_fields[i].classNameError}
                                     errorValidation={input.validation_error}
                                     ref={input.id}
+                                    value={self.state.state_fields[i].value}
                         />
         });
     }
@@ -107,7 +121,7 @@ class Textarea extends React.Component{
     render(){
         return(
             <div>
-                <textarea id={this.props.id} onChange={this.props.onChange} className={this.props.className}/>
+                <textarea id={this.props.id} onChange={this.props.onChange} className={this.props.className} value={this.props.value}/>
                 {this.props.validation_regex !== '' && (<div className={this.props.classNameError}>{this.props.errorValidation}</div>)}
             </div>
         )
@@ -121,7 +135,7 @@ class Input extends React.Component{
     render(){
         return(
             <div>
-                <input id={this.props.id} type={this.props.type} name={this.props.name} onChange={this.props.onChange} className={this.props.className} placeholder={this.props.placeholder}/>
+                <input id={this.props.id} type={this.props.type} name={this.props.name} value={this.props.value} onChange={this.props.onChange} className={this.props.className} placeholder={this.props.placeholder}/>
                 {this.props.label !== '' && (<label for={this.props.id}>{this.props.label}</label>)}
                 {this.props.validation_regex !== '' && (<div className={this.props.classNameError}>{this.props.errorValidation}</div>)}
             </div>

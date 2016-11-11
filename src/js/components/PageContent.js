@@ -11,10 +11,10 @@ export default class PageContent extends React.Component{
             <div className={this.props.className}>
                 <Form action="" method="post" use_ajax="true"
                         fields={[
-                                {id: "username", type: 'text', name: 'username', placeholder:'username', validation_regex: /^.{4,12}$/g, validation_error:'not valid username'},
+                                {id: "username", type: 'text', name: 'username', placeholder:'username', validation_regex: /^.{4,12}$/g, validation_error:'not valid username', value:''},
                                 {id: "rights", type: 'radio', name: 'rights', label: 'Reights?', validation_error:'not valid rigths'},
-                                {id: "t1", type: 'textarea', name: 't1', validation_regex: /^.{4,12}$/g, validation_error:'not valid t1'},
-                                {id: "submit", type: 'submit', name: 'submit_form'}
+                                {id: "t1", type: 'textarea', name: 't1', validation_regex: /^.{4,12}$/g, validation_error:'not valid t1', value:''},
+                                {id: "submit", type: 'submit', name: 'submit_form', value:'Submit'}
                         ]}
                 />
             </div>
