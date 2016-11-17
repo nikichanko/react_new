@@ -15,7 +15,8 @@ export default class Form extends React.Component{
                 classNameError: 'error_input', 
                 value: field.value !== undefined ? field.value : (field.isChecked?'1':'0'), 
                 isChecked: field.isChecked,
-                validated: false
+                validated: false,
+                name: field.name
             }
         })};
         this.onChange = this.onChange.bind(this);
@@ -100,25 +101,29 @@ export default class Form extends React.Component{
     }
 
     onChange(event) {
-
         const value = event.target.value;
         let field_id = event.target.id;
         let state_fields = this.state.state_fields;
         if(!this.refs.hasOwnProperty(field_id))
             return;
-        let field = this.refs[field_id];
-        let validation_regex = field.props.validation_regex;
+        const field = this.refs[field_id];
+        const validation_regex = field.props.validation_regex;
+        const isRadioBox = field.props.type==='radio' || field.props.type==='checkbox';
+
         //this field has validation so DO it
         let self = this;
-        console.log(state_fields);
         state_fields.map(function(f, i){
             if(f.id === field_id){
                 f.isChecked = !f.isChecked;
-                f.value = (field.props.type==='radio' || field.props.type==='checkbox')?(f.isChecked?'1':'0'):value;
+                f.value = isRadioBox?(f.isChecked?'1':'0'):value;
                 return self.getValidatedfield(f, validation_regex);
+            }else if(isRadioBox && f.name === field.props.name){
+                f.isChecked = false;
+                f.value = '0';
+                return f;
             }
         });
-        this.setState({ state_fields : state_fields});
+        this.setState({state_fields : state_fields});
     }
 
     FromfieldsBuild(){
@@ -175,7 +180,7 @@ export default class Form extends React.Component{
                 }
             }
            // if(j !== undefined){
-            console.log(fields_group);
+         //   console.log(fields_group);
          //   }
 
         }
