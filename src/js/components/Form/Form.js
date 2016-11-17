@@ -21,7 +21,6 @@ export default class Form extends React.Component{
         })};
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
-        this.groups = [];
     }
 /*
     componentDidMount(){
@@ -129,11 +128,11 @@ export default class Form extends React.Component{
     FromfieldsBuild(){
         const self = this;
         let fields = [];
+        let group_names = [];
         fields = self.props.fields.map(function(field, i){
-            if(field.grouplabel !== undefined && self.groups.indexOf(field.grouplabel)===-1){
-                self.groups.push(field.grouplabel);
+            if(field.groupname !== undefined && group_names.indexOf(field.groupname)===-1){
+                group_names.push(field.groupname);
             }
-            console.log(field.id)
             if (field.type === 'textarea')
                 return <Textarea key={field.id} id={field.id} name={field.name} 
                                     onChange={self.onChange} ref={field.id}
@@ -143,6 +142,7 @@ export default class Form extends React.Component{
                                     errorValidation={field.validation_error}
                                     ref={field.id}
                                     value={self.state.state_fields[i].value}
+                                    groupname={field.groupname}
                         />
            else if (field.type === 'select')
                 return <Select  key={field.id} id={field.id} name={field.name}
@@ -154,6 +154,7 @@ export default class Form extends React.Component{
                                 ref={field.id}
                                 value={self.state.state_fields[i].value}
                                 options={field.options}
+                                groupname={field.groupname}
                         />
             else  
                 return <Input key={field.id} id={field.id} type={field.type} name={field.name} placeholder={field.placeholder}
@@ -166,36 +167,30 @@ export default class Form extends React.Component{
                         errorValidation={field.validation_error}
                         ref={field.id}
                         value={self.state.state_fields[i].value}
-                        grouplabel={field.grouplabel}
+                        groupname={field.groupname}
                     />
         });
-       // console.log(fields);
-        return fields;
-    }
 
-    render(){
-        const fields1 = this.FromfieldsBuild();
-      //  console.log(fields1);
-        let fields = fields1;
-        for(var i in this.groups){
-            let fields_group = [];
+        for(var i in group_names){
+            let group_fields = [];
             let idx = -1;
-            for(var j in fields1){
-                //console.log(j);
-                if(fields1[j].props.grouplabel === this.groups[i]){
-                   // console.log(j);
-                  fields_group.push(fields1[j]);
+            for(var j in fields){
+                if(fields[j].props.groupname === group_names[i]){
+                  group_fields.push(fields[j]);
                   idx = j;
                   fields[j] = null;
                 }
             }
-            if(fields_group.length && idx >= 0){
-                fields[idx] = (<Group key={'form_group'+this.groups[i]} className={'form_group '+this.groups[i]} data={fields_group}/>);
-           }
-
+            if(group_fields.length && idx >= 0){
+                fields[idx] = (<Group key={'form_group'+group_names[i]} className={'form_group '+group_names[i]} data={group_fields}/>);
+            }
         }
- //const fields = this.FromfieldsBuild();
-      //    console.log(fields);
+
+        return fields;
+    }
+
+    render(){
+        const fields = this.FromfieldsBuild();
         return(
            <form action={this.props.action} method={this.props.method} onSubmit={this.onSubmit}>
                 {fields}
@@ -205,7 +200,7 @@ export default class Form extends React.Component{
 }
 
 class Group extends React.Component{
-        constructor(props){
+    constructor(props){
         super(props);
     }
     render(){

@@ -24,9 +24,9 @@ export default class PageContent extends React.Component{
                                                 {"text": "op3", "value": "3mi"},
                                             ]
                                 },
-                                {id: "genter1", type: 'radio', name: 'genter', label: 'Male',isChecked: false, grouplabel: "Sex"},
-                                {id: "genter2", type: 'radio', name: 'genter', label: 'female',isChecked: false, grouplabel: "Sex"},
-                                {id: "genter3", type: 'radio', name: 'genter', label: 'other',isChecked: false, grouplabel: "Sex"},
+                                {id: "genter1", type: 'radio', name: 'genter', label: 'Male',isChecked: false, groupname: "Sex"},
+                                {id: "genter2", type: 'radio', name: 'genter', label: 'female',isChecked: false, groupname: "Sex"},
+                                {id: "genter3", type: 'radio', name: 'genter', label: 'other',isChecked: false, groupname: "Sex"},
                                 {id: "submit", type: 'submit', name: 'submit_form', value:'Submit'}
                         ]}
                 />
