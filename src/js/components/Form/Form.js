@@ -128,10 +128,12 @@ export default class Form extends React.Component{
 
     FromfieldsBuild(){
         const self = this;
-        return self.props.fields.map(function(field, i){
+        let fields = [];
+        fields = self.props.fields.map(function(field, i){
             if(field.grouplabel !== undefined && self.groups.indexOf(field.grouplabel)===-1){
                 self.groups.push(field.grouplabel);
             }
+            console.log(field.id)
             if (field.type === 'textarea')
                 return <Textarea key={field.id} id={field.id} name={field.name} 
                                     onChange={self.onChange} ref={field.id}
@@ -142,7 +144,7 @@ export default class Form extends React.Component{
                                     ref={field.id}
                                     value={self.state.state_fields[i].value}
                         />
-            if (field.type === 'select')
+           else if (field.type === 'select')
                 return <Select  key={field.id} id={field.id} name={field.name}
                                 onChange={self.onChange} ref={field.id}
                                 validation_regex={field.hasOwnProperty('validation_regex')?field.validation_regex:''}
@@ -167,29 +169,50 @@ export default class Form extends React.Component{
                         grouplabel={field.grouplabel}
                     />
         });
+       // console.log(fields);
+        return fields;
     }
 
     render(){
         const fields1 = this.FromfieldsBuild();
+      //  console.log(fields1);
+        let fields = fields1;
         for(var i in this.groups){
             let fields_group = [];
+            let idx = -1;
             for(var j in fields1){
+                //console.log(j);
                 if(fields1[j].props.grouplabel === this.groups[i]){
-                  fields_group[j] = fields1[j];
-                //  fields1 = fields1.splice(j,1);
+                   // console.log(j);
+                  fields_group.push(fields1[j]);
+                  idx = j;
+                  fields[j] = null;
                 }
             }
-           // if(j !== undefined){
-         //   console.log(fields_group);
-         //   }
+            if(fields_group.length && idx >= 0){
+                fields[idx] = (<Group key={'form_group'+this.groups[i]} className={'form_group '+this.groups[i]} data={fields_group}/>);
+           }
 
         }
- const fields = this.FromfieldsBuild();
-      //  console.log(fields);
+ //const fields = this.FromfieldsBuild();
+      //    console.log(fields);
         return(
            <form action={this.props.action} method={this.props.method} onSubmit={this.onSubmit}>
                 {fields}
            </form>
+        )
+    }
+}
+
+class Group extends React.Component{
+        constructor(props){
+        super(props);
+    }
+    render(){
+        return(
+            <div className={this.props.className}>
+                {this.props.data}
+            </div>
         )
     }
 }
