@@ -182,7 +182,7 @@ export default class Form extends React.Component{
                 }
             }
             if(group_fields.length && idx >= 0){
-                fields[idx] = (<Group key={'form_group'+group_names[i]} className={'form_group '+group_names[i]} data={group_fields}/>);
+                fields[idx] = (<Group key={'form_group'+group_names[i]} id={'form_group'+group_names[i]} className={'form_group '+group_names[i]} data={group_fields}/>);
             }
         }
 
@@ -205,7 +205,7 @@ class Group extends React.Component{
     }
     render(){
         return(
-            <div className={this.props.className}>
+            <div className={this.props.className} id={this.props.id}>
                 {this.props.data}
             </div>
         )
