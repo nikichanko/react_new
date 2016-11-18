@@ -16,9 +16,9 @@ export default class Form extends React.Component{
                 value: field.value, 
                 isChecked: field.isChecked ? '1' : '0',
                 name: field.name,
-                validation_regex: (field.type === 'radio' || field.type === 'checkbox') && field.validation_error !== undefined ? /^(?=.*1).{1}$/g : field.validation_regex,
+                validation_regex: (field.type === 'radio' || field.type === 'checkbox' || field.type === 'select') && field.validation_error !== undefined ? /^(?=.*1).{1}$/g : field.validation_regex,
                 validated: false,
-                isRadioBox: field.type === 'radio' || field.type === 'checkbox'
+                type: field.type
             }
         })};
         this.onChange = this.onChange.bind(this);
@@ -73,7 +73,7 @@ export default class Form extends React.Component{
                 }
             }
         }
-console.log(serialize_fields);
+
         this.setState({state_fields : state_fields});
         if(not_validated_count==0){
             if(this.props.use_xml){
@@ -101,7 +101,7 @@ console.log(serialize_fields);
         let classN = field.className.split(' ');
         let classNError = field.classNameError.split(' ');
         const regex = new RegExp(field.validation_regex);
-        const validated = regex.test(field.isRadioBox? field.isChecked : field.value);
+        const validated = regex.test(field.type === 'radio' || field.type === 'checkbox' || field.type === 'select'? field.isChecked : field.value);
 
         if(!validated && classN.indexOf('notvalidated')===-1){
             classN.push('notvalidated');
@@ -135,10 +135,11 @@ console.log(serialize_fields);
         let self = this;
         state_fields.map(function(f, i){
             if(f.id === target_field_id){
-                f.isChecked = f.isChecked === '1' ? '0' : '1';
+                f.isChecked = f.isChecked === '0' ? '1' : (f.type==='select' ? '1': '0');  // reverse choice for radio and checkbox fields each time change the fields, but for select just once
                 f.value = value;
                 return self.getValidatedfield(f);
-            }else if(f.isRadioBox && f.name === targt_field.props.name){
+            }else if(f.type==='radio' && f.name === targt_field.props.name){
+                //group with same name radio input fields
                 if(f.isChecked === '1')
                     f.isChecked = '0';
                 f.className = f.className.replace('notvalidated','');
@@ -179,6 +180,7 @@ console.log(serialize_fields);
                                 value={self.state.state_fields[i].value}
                                 options={field.options}
                                 groupname={field.groupname}
+                                isChecked={self.state.state_fields[i].isChecked}
                         />
             else  
                 return <Input key={field.id} id={field.id} type={field.type} name={self.state.state_fields[i].name} placeholder={field.placeholder}
@@ -249,6 +251,7 @@ class Select extends React.Component{
                 <select id={this.props.id} onChange={this.props.onChange} className={this.props.className} value={this.props.value}>
                     {options}
                 </select>
+                {this.props.errorValidation !== undefined && (<div className={this.props.classNameError}>{this.props.errorValidation}</div>)}
             </div>
         )
     }
@@ -273,7 +276,7 @@ class Textarea extends React.Component{
         return(
             <div>
                 <textarea id={this.props.id} onChange={this.props.onChange} className={this.props.className} value={this.props.value}/>
-                {this.props.validation_regex !== '' && (<div className={this.props.classNameError}>{this.props.errorValidation}</div>)}
+                {this.props.errorValidation !== undefined && (<div className={this.props.classNameError}>{this.props.errorValidation}</div>)}
             </div>
         )
     }
@@ -290,7 +293,7 @@ class Input extends React.Component{
                 onChange={this.props.onChange} className={this.props.className} placeholder={this.props.placeholder}
                 checked={this.props.isChecked==='1'?true:false}/>
                 {this.props.label !== '' && (<label for={this.props.id}>{this.props.label}</label>)}
-                {this.props.validation_regex !== '' && (<div className={this.props.classNameError}>{this.props.errorValidation}</div>)}
+                {this.props.errorValidation !== undefined && (<div className={this.props.classNameError}>{this.props.errorValidation}</div>)}
             </div>
         )
     }

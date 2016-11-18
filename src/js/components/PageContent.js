@@ -17,7 +17,7 @@ export default class PageContent extends React.Component{
                                 {id: "username", type: 'text', name: 'username', placeholder:'username', validation_regex: /^.{4,12}$/g, validation_error:'not valid username', value:''},
                                 {id: "rights", type: 'checkbox', name: 'rights', label: 'condidtions?', validation_error:'need to enable', isChecked: false},
                                 {id: "t1", type: 'textarea', name: 't1', validation_regex: /^.{4,12}$/g, validation_error:'not valid t1', value:'dfdfdf'},
-                                {id: "selec1", type: 'select', name: 'selec1', value:'2mi', 
+                                {id: "selec1", type: 'select', name: 'selec1', value:'2mi', validation_error:'not selec1 select',
                                     options: [
                                                 {"text": "op1", "value": "1mi"},
                                                 {"text": "op2", "value": "2mi"},
