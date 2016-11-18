@@ -2,7 +2,6 @@ import React from "react";
 import func from "../../globalFunctions.js";
 
 import '../../../css/form.css';
-import formStore from "../../store/formStore";
 
 export default class Form extends React.Component{
     constructor(props){
