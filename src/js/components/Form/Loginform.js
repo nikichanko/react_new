@@ -8,7 +8,7 @@ export default class LoginForm extends React.Component{
     }
     render(){
         return (
-                <Form action="http://localhost:8080/json.json" method="get" use_xml="true"
+                <Form action="http://localhost:8080/json.json" method="get" use_xml="true" className="loginForm"
                         onCompleteXmlSubmit={function(response){
                             console.log('rrr', response);
                         }}

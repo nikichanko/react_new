@@ -214,7 +214,7 @@ export default class Form extends React.Component{
     render(){
         const fields = this.FromfieldsBuild();
         return(
-           <form action={this.props.action} method={this.props.method} onSubmit={this.onSubmit}>
+           <form action={this.props.action} method={this.props.method} onSubmit={this.onSubmit} className={this.props.className}>
                 {fields}
            </form>
         )
