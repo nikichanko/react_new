@@ -34,14 +34,10 @@ export default class Form extends React.Component{
         let fields_same_name = [];
         state_fields.map(function(f, i){
             const field = self.getValidatedfield(f);
-            if(!field.validated)
+            if(field.validated)
+                serialize_fields.push({name: f.name, value: f.value});
+            else
                 not_validated_count++;
-            else{
-                serialize_fields.push({
-                    name: f.name,
-                    value: f.value
-                });
-            }
 
             if(!fields_same_name.hasOwnProperty(f.name))
                 fields_same_name[f.name] = [];
