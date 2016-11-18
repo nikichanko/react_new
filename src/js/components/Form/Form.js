@@ -28,13 +28,10 @@ export default class Form extends React.Component{
         let state_fields = this.state.state_fields;
         const self = this;
         let not_validated_count = 0;
-        let serialize_fields = [];
         let fields_same_name = [];
         state_fields.map(function(f, i){
             const field = self.getValidatedfield(f);
-            if(field.validated)
-                serialize_fields.push({name: f.name, value: f.value});
-            else
+            if(!field.validated)
                 not_validated_count++;
 
             if(!fields_same_name.hasOwnProperty(f.name))
@@ -78,10 +75,14 @@ export default class Form extends React.Component{
         if(not_validated_count===0){
             if(this.props.use_xml){
                 event.preventDefault();
+                const self = this;
                 let xml = new func.xmlhttpRequest({
                     url: self.props.action,
                     type: self.props.method,
-                    params: JSON.stringify(serialize_fields),
+                    params: JSON.stringify(self.state.state_fields.map(function(f,i){
+                        if(f.validated)
+                            return {name: f.name, value: f.value}
+                    })),
                     onCompleteRequest: function(response){
                         self.props.onCompleteXmlSubmit(response);
                     }
