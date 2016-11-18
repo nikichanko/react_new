@@ -24,9 +24,8 @@ export default class Form extends React.Component{
         this.onSubmit = this.onSubmit.bind(this);
     }
 
-    onSubmit(event){
-        const props_fields = this.props.fields;
-        const state_fields = this.state.state_fields;
+    validateFields(){
+        let state_fields = this.state.state_fields;
         const self = this;
         let not_validated_count = 0;
         let serialize_fields = [];
@@ -71,7 +70,12 @@ export default class Form extends React.Component{
         }
 
         this.setState({state_fields : state_fields});
-        if(not_validated_count==0){
+        return not_validated_count;
+    }
+
+    onSubmit(event){
+        const not_validated_count = this.validateFields();
+        if(not_validated_count===0){
             if(this.props.use_xml){
                 event.preventDefault();
                 let xml = new func.xmlhttpRequest({
