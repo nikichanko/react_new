@@ -47,21 +47,12 @@ export default class Form extends React.Component{
                 let field = fields_same_name[i];
                 var validated_result = field.map(function(a) {return a.validated;});
                 var is_valid_group = validated_result.indexOf(true)!==-1;
-                if(is_valid_group){
+                if(is_valid_group)
                     not_validated_count -= field.length - 1;
-                    for(var j=0; j<field.length; j++){
-                        state_fields[field[j].inx].className = state_fields[field[j].inx].className.replace('notvalidated','');
-                        state_fields[field[j].inx].classNameError = state_fields[field[j].inx].classNameError.replace('active','');
-                    }
-                }
-                else {
-                    for(var j=0; j<field.length; j++){
-                        if(j<(field.length-1)){
-                            state_fields[field[j].inx].className = state_fields[field[j].inx].className.replace('notvalidated','');
-                            state_fields[field[j].inx].classNameError = state_fields[field[j].inx].classNameError.replace('active','');
-                        }
-
-                    }
+                for(var j=0; j<field.length - (is_valid_group ? 0 : 1); j++){
+                    var inx = field[j].inx;
+                    state_fields[inx].className = state_fields[inx].className.replace('notvalidated','');
+                    state_fields[inx].classNameError = state_fields[inx].classNameError.replace('active','');
                 }
             }
         }
