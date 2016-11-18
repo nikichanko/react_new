@@ -41,7 +41,7 @@ export default class Form extends React.Component{
             return field;
         });
 
-        // for radio groups
+        // for radio fileds with same name
         for(var i in fields_same_name){
             if(fields_same_name[i].length > 1){
                 let field = fields_same_name[i];
