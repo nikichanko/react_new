@@ -4,9 +4,6 @@ import Form from "./Form";
 import constants from "../../globals";
 
 export default class LoginForm extends React.Component{
-    constructor(props){
-        super(props);
-    }
     render(){
         return (
                 <Form action="http://localhost:8080/json.json" method="get" use_xml="true" className="loginForm"
@@ -16,7 +13,7 @@ export default class LoginForm extends React.Component{
                         fields={[
                                 {id: "username", type: 'text', name: 'username', placeholder:'username', validation_regex: constants.regex.username, validation_error:'not valid username', value:''},
                                 {id: "rights", type: 'checkbox', name: 'rights', label: 'condidtions?', validation_error:'need to enable', isChecked: false},
-                                {id: "t1", type: 'textarea', name: 't1', validation_regex: constants.regex.password, validation_error:'not valid t1', value:'dfdfdf'},
+                                {id: "t1", type: 'textarea', name: 't1', validation_regex: constants.regex.password, validation_error:'not valid t1', value:''},
                                 {id: "selec1", type: 'select', name: 'selec1', value:'2mi', validation_error:'not selec1 select',
                                     options: [
                                                 {"text": "op1", "value": "1mi"},

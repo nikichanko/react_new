@@ -158,41 +158,42 @@ export default class Form extends React.Component{
             if(field.groupname !== undefined && group_names.indexOf(field.groupname)===-1){
                 group_names.push(field.groupname);
             }
+            let state_field = self.state.state_fields[i];
             if (field.type === 'textarea')
-                return <Textarea key={field.id} id={field.id} name={self.state.state_fields[i].name} 
+                return <Textarea key={field.id} id={field.id} name={state_field.name} 
                                 onChange={self.onChange} ref={field.id}
-                                validation_regex={self.state.state_fields[i].validation_regex}
-                                className={self.state.state_fields[i].className}
-                                classNameError={self.state.state_fields[i].classNameError}
+                                validation_regex={state_field.validation_regex}
+                                className={state_field.className}
+                                classNameError={state_field.classNameError}
                                 errorValidation={field.validation_error}
                                 ref={field.id}
-                                value={self.state.state_fields[i].value}
+                                value={state_field.value}
                                 groupname={field.groupname}
                         />
            else if (field.type === 'select')
-                return <Select  key={field.id} id={field.id} name={self.state.state_fields[i].name}
+                return <Select  key={field.id} id={field.id} name={state_field.name}
                                 onChange={self.onChange} ref={field.id}
-                                validation_regex={self.state.state_fields[i].validation_regex}
-                                className={self.state.state_fields[i].className}
-                                classNameError={self.state.state_fields[i].classNameError}
+                                validation_regex={state_field.validation_regex}
+                                className={state_field.className}
+                                classNameError={state_field.classNameError}
                                 errorValidation={field.validation_error}
                                 ref={field.id}
-                                value={self.state.state_fields[i].value}
+                                value={state_field.value}
                                 options={field.options}
                                 groupname={field.groupname}
-                                isChecked={self.state.state_fields[i].isChecked}
+                                isChecked={state_field.isChecked}
                         />
             else  
-                return <Input key={field.id} id={field.id} type={field.type} name={self.state.state_fields[i].name} placeholder={field.placeholder}
+                return <Input key={field.id} id={field.id} type={field.type} name={state_field.name} placeholder={field.placeholder}
                                 label={field.hasOwnProperty('label')?field.label:''}
-                                validation_regex={self.state.state_fields[i].validation_regex}
+                                validation_regex={state_field.validation_regex}
                                 onChange={self.onChange}
-                                isChecked={self.state.state_fields[i].isChecked}
-                                className={self.state.state_fields[i].className}
-                                classNameError={self.state.state_fields[i].classNameError}
+                                isChecked={state_field.isChecked}
+                                className={state_field.className}
+                                classNameError={state_field.classNameError}
                                 errorValidation={field.validation_error}
                                 ref={field.id}
-                                value={self.state.state_fields[i].value}
+                                value={state_field.value}
                                 groupname={field.groupname}
                         />
         });
