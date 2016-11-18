@@ -15,7 +15,7 @@ export default class PageContent extends React.Component{
                         }}
                         fields={[
                                 {id: "username", type: 'text', name: 'username', placeholder:'username', validation_regex: /^.{4,12}$/g, validation_error:'not valid username', value:''},
-                                {id: "rights", type: 'checkbox', name: 'rights', label: 'condidtions?', validation_error:'need to enable', validation_regex:/^(?=.*1).{1}$/g, isChecked: false},
+                                {id: "rights", type: 'checkbox', name: 'rights', label: 'condidtions?', validation_error:'need to enable', isChecked: false},
                                 {id: "t1", type: 'textarea', name: 't1', validation_regex: /^.{4,12}$/g, validation_error:'not valid t1', value:'dfdfdf'},
                                 {id: "selec1", type: 'select', name: 'selec1', value:'2mi', 
                                     options: [
@@ -24,9 +24,9 @@ export default class PageContent extends React.Component{
                                                 {"text": "op3", "value": "3mi"},
                                             ]
                                 },
-                                {id: "genter1", type: 'radio', name: 'genter', label: 'Male',isChecked: false, groupname: "Sex",validation_error:'need to enable', validation_regex:/^(?=.*1).{1}$/g},
-                                {id: "genter2", type: 'radio', name: 'genter', label: 'female',isChecked: false, groupname: "Sex",validation_error:'need to enable', validation_regex:/^(?=.*1).{1}$/g},
-                                {id: "genter3", type: 'radio', name: 'genter', label: 'other',isChecked: false, groupname: "Sex", validation_error:'need to enable', validation_regex:/^(?=.*1).{1}$/g},
+                                {id: "genter1", type: 'radio', name: 'genter', label: 'Male',value: "male" ,isChecked: false, groupname: "Sex",validation_error:'need to enable'},
+                                {id: "genter2", type: 'radio', name: 'genter', label: 'female',value: "female", isChecked: false, groupname: "Sex",validation_error:'need to enable'},
+                                {id: "genter3", type: 'radio', name: 'genter', label: 'other',value: "other", isChecked: false, groupname: "Sex", validation_error:'need to enable'},
                                 {id: "submit", type: 'submit', name: 'submit_form', value:'Submit'}
                         ]}
                 />

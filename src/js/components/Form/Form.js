@@ -13,26 +13,17 @@ export default class Form extends React.Component{
                 id: field.id, 
                 className:'forminput', 
                 classNameError: 'error_input', 
-                value: field.value !== undefined ? field.value : (field.isChecked?'1':'0'), 
-                isChecked: field.isChecked,
+                value: field.value, 
+                isChecked: field.isChecked ? '1' : '0',
+                name: field.name,
+                validation_regex: (field.type === 'radio' || field.type === 'checkbox') && field.validation_error !== undefined ? /^(?=.*1).{1}$/g : field.validation_regex,
                 validated: false,
-                name: field.name
+                isRadioBox: field.type === 'radio' || field.type === 'checkbox'
             }
         })};
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     }
-/*
-    componentDidMount(){
-        fetch('/api/serverTime').then(function(response){
-            return response.json().then(function(json){
-                console.log(json.time)
-            })
-        }).catch(function(response){
-            console.log("error!");
-        });
-    }
-*/
 
     onSubmit(event){
         const props_fields = this.props.fields;
@@ -42,16 +33,13 @@ export default class Form extends React.Component{
         let serialize_fields = [];
         let fields_same_name = [];
         state_fields.map(function(f, i){
-            const validation_regex = props_fields[i].validation_regex;
-            const field = self.getValidatedfield(f, validation_regex);
-            const label = props_fields[i].label;
-            const is_radio = props_fields[i].type === 'radio';
+            const field = self.getValidatedfield(f);
             if(!field.validated)
                 not_validated_count++;
             else{
                 serialize_fields.push({
                     name: f.name,
-                    value: is_radio ? label : f.value
+                    value: f.value
                 });
             }
 
@@ -85,7 +73,7 @@ export default class Form extends React.Component{
                 }
             }
         }
-
+console.log(serialize_fields);
         this.setState({state_fields : state_fields});
         if(not_validated_count==0){
             if(this.props.use_xml){
@@ -105,15 +93,16 @@ export default class Form extends React.Component{
         }
     }
 
-    getValidatedfield(field, validation_regex) {
-        if(validation_regex === undefined){
+    getValidatedfield(field) {
+        if(field.validation_regex === undefined){
             field.validated = true;
             return field;
         }
         let classN = field.className.split(' ');
         let classNError = field.classNameError.split(' ');
-        const pattern = new RegExp(validation_regex);
-        const validated = pattern.test(field.value);
+        const regex = new RegExp(field.validation_regex);
+        const validated = regex.test(field.isRadioBox? field.isChecked : field.value);
+
         if(!validated && classN.indexOf('notvalidated')===-1){
             classN.push('notvalidated');
         }
@@ -140,20 +129,20 @@ export default class Form extends React.Component{
         let state_fields = this.state.state_fields;
         if(!this.refs.hasOwnProperty(target_field_id))
             return;
-        const field = this.refs[target_field_id];
-        const validation_regex = field.props.validation_regex;
-        const isRadioBox = field.props.type==='radio' || field.props.type==='checkbox';
+        const targt_field = this.refs[target_field_id];
 
         //this field has validation so DO it
         let self = this;
         state_fields.map(function(f, i){
             if(f.id === target_field_id){
-                f.isChecked = !f.isChecked;
-                f.value = isRadioBox?(f.isChecked?'1':'0'):value;
-                return self.getValidatedfield(f, validation_regex);
-            }else if(isRadioBox && f.name === field.props.name && f.isChecked){
-                f.isChecked = false;
-                f.value = '0';
+                f.isChecked = f.isChecked === '1' ? '0' : '1';
+                f.value = value;
+                return self.getValidatedfield(f);
+            }else if(f.isRadioBox && f.name === targt_field.props.name){
+                if(f.isChecked === '1')
+                    f.isChecked = '0';
+                f.className = f.className.replace('notvalidated','');
+                f.classNameError = f.classNameError.replace('active','');
                 return f;
             }
         });
@@ -171,7 +160,7 @@ export default class Form extends React.Component{
             if (field.type === 'textarea')
                 return <Textarea key={field.id} id={field.id} name={self.state.state_fields[i].name} 
                                     onChange={self.onChange} ref={field.id}
-                                    validation_regex={field.hasOwnProperty('validation_regex')?field.validation_regex:''}
+                                    validation_regex={self.state.state_fields[i].validation_regex}
                                     className={self.state.state_fields[i].className}
                                     classNameError={self.state.state_fields[i].classNameError}
                                     errorValidation={field.validation_error}
@@ -182,7 +171,7 @@ export default class Form extends React.Component{
            else if (field.type === 'select')
                 return <Select  key={field.id} id={field.id} name={self.state.state_fields[i].name}
                                 onChange={self.onChange} ref={field.id}
-                                validation_regex={field.hasOwnProperty('validation_regex')?field.validation_regex:''}
+                                validation_regex={self.state.state_fields[i].validation_regex}
                                 className={self.state.state_fields[i].className}
                                 classNameError={self.state.state_fields[i].classNameError}
                                 errorValidation={field.validation_error}
@@ -194,7 +183,7 @@ export default class Form extends React.Component{
             else  
                 return <Input key={field.id} id={field.id} type={field.type} name={self.state.state_fields[i].name} placeholder={field.placeholder}
                                 label={field.hasOwnProperty('label')?field.label:''}
-                                validation_regex={field.hasOwnProperty('validation_regex')?field.validation_regex:''}
+                                validation_regex={self.state.state_fields[i].validation_regex}
                                 onChange={self.onChange}
                                 isChecked={self.state.state_fields[i].isChecked}
                                 className={self.state.state_fields[i].className}
@@ -299,7 +288,7 @@ class Input extends React.Component{
             <div>
                 <input id={this.props.id} type={this.props.type} name={this.props.name} value={this.props.value} 
                 onChange={this.props.onChange} className={this.props.className} placeholder={this.props.placeholder}
-                checked={this.props.isChecked}/>
+                checked={this.props.isChecked==='1'?true:false}/>
                 {this.props.label !== '' && (<label for={this.props.id}>{this.props.label}</label>)}
                 {this.props.validation_regex !== '' && (<div className={this.props.classNameError}>{this.props.errorValidation}</div>)}
             </div>
