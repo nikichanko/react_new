@@ -46,6 +46,7 @@ export default class Form extends React.Component{
             return field;
         });
 
+        // for radio groups
         for(var i in fields_same_name){
             if(fields_same_name[i].length > 1){
                 let field = fields_same_name[i];
@@ -156,14 +157,14 @@ export default class Form extends React.Component{
             }
             if (field.type === 'textarea')
                 return <Textarea key={field.id} id={field.id} name={self.state.state_fields[i].name} 
-                                    onChange={self.onChange} ref={field.id}
-                                    validation_regex={self.state.state_fields[i].validation_regex}
-                                    className={self.state.state_fields[i].className}
-                                    classNameError={self.state.state_fields[i].classNameError}
-                                    errorValidation={field.validation_error}
-                                    ref={field.id}
-                                    value={self.state.state_fields[i].value}
-                                    groupname={field.groupname}
+                                onChange={self.onChange} ref={field.id}
+                                validation_regex={self.state.state_fields[i].validation_regex}
+                                className={self.state.state_fields[i].className}
+                                classNameError={self.state.state_fields[i].classNameError}
+                                errorValidation={field.validation_error}
+                                ref={field.id}
+                                value={self.state.state_fields[i].value}
+                                groupname={field.groupname}
                         />
            else if (field.type === 'select')
                 return <Select  key={field.id} id={field.id} name={self.state.state_fields[i].name}
