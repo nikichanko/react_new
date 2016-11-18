@@ -1,4 +1,4 @@
-var self = {
+const that = {
     getDate: function(){
         return new  Date();
     },
@@ -32,7 +32,7 @@ var self = {
             onError404: function(){console.log("Error 400")},
             onErrorAll: function(){console.log("Other error")}
         };
-        this.settings = self.extend(defaults, options);
+        this.settings = that.extend(defaults, options);
         this.xmlhttp = new XMLHttpRequest();
         this.doRequest = function() {
             var obj = this;
@@ -60,4 +60,4 @@ var self = {
         }
     }
 }
-module.exports = self;
+module.exports = that;

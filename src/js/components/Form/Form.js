@@ -37,20 +37,55 @@ export default class Form extends React.Component{
     onSubmit(event){
         const props_fields = this.props.fields;
         const state_fields = this.state.state_fields;
-        let self = this;
+        const self = this;
         let not_validated_count = 0;
         let serialize_fields = [];
+        let fields_same_name = [];
         state_fields.map(function(f, i){
-            let validation_regex = props_fields[i].validation_regex;
-            serialize_fields.push({
-                name: props_fields[i].name,
-                value: f.value
-            })
-            var field = self.getValidatedfield(f, validation_regex);
+            const validation_regex = props_fields[i].validation_regex;
+            const field = self.getValidatedfield(f, validation_regex);
+            const label = props_fields[i].label;
+            const is_radio = props_fields[i].type === 'radio';
             if(!field.validated)
                 not_validated_count++;
+            else{
+                serialize_fields.push({
+                    name: f.name,
+                    value: is_radio ? label : f.value
+                });
+            }
+
+            if(!fields_same_name.hasOwnProperty(f.name))
+                fields_same_name[f.name] = [];
+            fields_same_name[f.name].push({inx: i, validated: field.validated});
+
             return field;
         });
+
+        for(var i in fields_same_name){
+            if(fields_same_name[i].length > 1){
+                let field = fields_same_name[i];
+                var validated_result = field.map(function(a) {return a.validated;});
+                var is_valid_group = validated_result.indexOf(true)!==-1;
+                if(is_valid_group){
+                    not_validated_count -= field.length - 1;
+                    for(var j=0; j<field.length; j++){
+                        state_fields[field[j].inx].className = state_fields[field[j].inx].className.replace('notvalidated','');
+                        state_fields[field[j].inx].classNameError = state_fields[field[j].inx].classNameError.replace('active','');
+                    }
+                }
+                else {
+                    for(var j=0; j<field.length; j++){
+                        if(j<(field.length-1)){
+                            state_fields[field[j].inx].className = state_fields[field[j].inx].className.replace('notvalidated','');
+                            state_fields[field[j].inx].classNameError = state_fields[field[j].inx].classNameError.replace('active','');
+                        }
+
+                    }
+                }
+            }
+        }
+
         this.setState({state_fields : state_fields});
         if(not_validated_count==0){
             if(this.props.use_xml){
@@ -77,8 +112,8 @@ export default class Form extends React.Component{
         }
         let classN = field.className.split(' ');
         let classNError = field.classNameError.split(' ');
-        let pattern = new RegExp(validation_regex);
-        let validated = pattern.test(field.value);
+        const pattern = new RegExp(validation_regex);
+        const validated = pattern.test(field.value);
         if(!validated && classN.indexOf('notvalidated')===-1){
             classN.push('notvalidated');
         }
@@ -101,22 +136,22 @@ export default class Form extends React.Component{
 
     onChange(event) {
         const value = event.target.value;
-        let field_id = event.target.id;
+        let target_field_id = event.target.id;
         let state_fields = this.state.state_fields;
-        if(!this.refs.hasOwnProperty(field_id))
+        if(!this.refs.hasOwnProperty(target_field_id))
             return;
-        const field = this.refs[field_id];
+        const field = this.refs[target_field_id];
         const validation_regex = field.props.validation_regex;
         const isRadioBox = field.props.type==='radio' || field.props.type==='checkbox';
 
         //this field has validation so DO it
         let self = this;
         state_fields.map(function(f, i){
-            if(f.id === field_id){
+            if(f.id === target_field_id){
                 f.isChecked = !f.isChecked;
                 f.value = isRadioBox?(f.isChecked?'1':'0'):value;
                 return self.getValidatedfield(f, validation_regex);
-            }else if(isRadioBox && f.name === field.props.name){
+            }else if(isRadioBox && f.name === field.props.name && f.isChecked){
                 f.isChecked = false;
                 f.value = '0';
                 return f;
@@ -134,7 +169,7 @@ export default class Form extends React.Component{
                 group_names.push(field.groupname);
             }
             if (field.type === 'textarea')
-                return <Textarea key={field.id} id={field.id} name={field.name} 
+                return <Textarea key={field.id} id={field.id} name={self.state.state_fields[i].name} 
                                     onChange={self.onChange} ref={field.id}
                                     validation_regex={field.hasOwnProperty('validation_regex')?field.validation_regex:''}
                                     className={self.state.state_fields[i].className}
@@ -145,7 +180,7 @@ export default class Form extends React.Component{
                                     groupname={field.groupname}
                         />
            else if (field.type === 'select')
-                return <Select  key={field.id} id={field.id} name={field.name}
+                return <Select  key={field.id} id={field.id} name={self.state.state_fields[i].name}
                                 onChange={self.onChange} ref={field.id}
                                 validation_regex={field.hasOwnProperty('validation_regex')?field.validation_regex:''}
                                 className={self.state.state_fields[i].className}
@@ -157,20 +192,20 @@ export default class Form extends React.Component{
                                 groupname={field.groupname}
                         />
             else  
-                return <Input key={field.id} id={field.id} type={field.type} name={field.name} placeholder={field.placeholder}
-                        label={field.hasOwnProperty('label')?field.label:''}
-                        validation_regex={field.hasOwnProperty('validation_regex')?field.validation_regex:''}
-                        onChange={self.onChange}
-                        isChecked={self.state.state_fields[i].isChecked}
-                        className={self.state.state_fields[i].className}
-                        classNameError={self.state.state_fields[i].classNameError}
-                        errorValidation={field.validation_error}
-                        ref={field.id}
-                        value={self.state.state_fields[i].value}
-                        groupname={field.groupname}
-                    />
+                return <Input key={field.id} id={field.id} type={field.type} name={self.state.state_fields[i].name} placeholder={field.placeholder}
+                                label={field.hasOwnProperty('label')?field.label:''}
+                                validation_regex={field.hasOwnProperty('validation_regex')?field.validation_regex:''}
+                                onChange={self.onChange}
+                                isChecked={self.state.state_fields[i].isChecked}
+                                className={self.state.state_fields[i].className}
+                                classNameError={self.state.state_fields[i].classNameError}
+                                errorValidation={field.validation_error}
+                                ref={field.id}
+                                value={self.state.state_fields[i].value}
+                                groupname={field.groupname}
+                        />
         });
-
+        //if there are any grouped fields wrap them in proper div
         for(var i in group_names){
             let group_fields = [];
             let idx = -1;
@@ -182,7 +217,7 @@ export default class Form extends React.Component{
                 }
             }
             if(group_fields.length && idx >= 0){
-                fields[idx] = (<Group key={'form_group'+group_names[i]} id={'form_group'+group_names[i]} className={'form_group '+group_names[i]} data={group_fields}/>);
+                fields[idx] = (<Group key={'form_group'+group_names[i]} id={'form_group'+group_names[i]} className={'form_group '+group_names[i]} fields={group_fields}/>);
             }
         }
 
@@ -206,7 +241,7 @@ class Group extends React.Component{
     render(){
         return(
             <div className={this.props.className} id={this.props.id}>
-                {this.props.data}
+                {this.props.fields}
             </div>
         )
     }
