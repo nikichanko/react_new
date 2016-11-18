@@ -1,7 +1,7 @@
 import React from "react";
 
 import Form from "./Form";
-import constants from "../../globals";
+import constants from "../../constants";
 
 export default class LoginForm extends React.Component{
     render(){
