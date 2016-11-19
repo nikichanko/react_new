@@ -24,6 +24,17 @@ export default class Form extends React.Component{
         this.onSubmit = this.onSubmit.bind(this);
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+      //  console.log(nextState.state_fields);
+    if (this.props.fields !== nextProps.fields) {
+      return true;
+    }
+    if (this.state.state_fields !== nextState.state_fields) {
+      return true;
+    }
+    return true;
+  }
+
     validateFields(){
         let state_fields = this.state.state_fields;
         const self = this;
