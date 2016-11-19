@@ -11,6 +11,8 @@ export default class Header extends React.Component{
             <header className="header">
                 <Menu extraMenu={window.extra_menu} />
                 {window.login_info ? <LoggedUser loggedInfo={window.login_info} /> : <LonginForm />}
+
+                
             </header>
         );
     }

@@ -12,6 +12,7 @@ export default class LoggedUser extends React.Component{
                 <span>{this.props.loggedInfo.username}</span>
                 <a href={path.join(__dirname, this.props.loggedInfo.profilepage)}>profile</a>
                 {this.props.loggedInfo.hasOwnProperty('avatar') && <img src={this.props.loggedInfo.avatar} alt={this.props.loggedInfo.username}/>}
+                <span>ess</span>
             </div>
         );
     }
