@@ -10,10 +10,10 @@ export default class Layout extends React.Component{
     }
     render(){
         return (
-            <div className={this.props.wraperClass}>
-                <Header className={this.props.headerClass}/>
-                <PageContent className={this.props.contentClass}/>
-                <Footer className={this.props.footerClass}/>
+            <div className="wrapper">
+                <Header/>
+                <PageContent page_id={this.props.page_id}/>
+                <Footer/>
             </div>
         );
     }

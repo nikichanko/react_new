@@ -5,10 +5,29 @@
         <title>React tutorials</title>
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
-        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">    
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     </head>
     <body>
-        <div id="root"></div>
+        <div id="root" data-page="11"></div>
+        <script>
+            var extra_menu = [
+                {
+                    label : 'Amdmin',
+                    href  : 'admin.html',
+                    submenu : [
+                        {
+                            label : 'admincart',
+                            href  : 'admincart.html'
+                        }
+                    ]
+                }
+            ];
+            var login_info = {
+                username : 'niki',
+                avatar   : './images/nikiavatr.png',
+                profilepage : "./profile.php?user=12"
+            };
+        </script>
         <script src="client.min.js"></script>
     </body>
 </html>
