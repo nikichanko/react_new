@@ -2,6 +2,9 @@ const that = {
     getDate: function(){
         return new  Date();
     },
+    createMarkup: function(html_str){
+         return {__html: html_str}; 
+    },
     extend: function (defaults, options) {
         this.defaults = defaults;
         this.options = options;

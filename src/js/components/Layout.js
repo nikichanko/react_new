@@ -12,7 +12,7 @@ export default class Layout extends React.Component{
         return (
             <div className="wrapper">
                 <Header/>
-                <PageContent page_id={this.props.page_id}/>
+                <PageContent/>
                 <Footer/>
             </div>
         );
