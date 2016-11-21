@@ -23,8 +23,8 @@ export default class CartPage extends React.Component{
     buildProdcuts(){ 
         return this.products.map(function(product, i){
             return (
-                <LazyLoad height={200} placeholder={(<span>niki</span>)} offset={100}>
-                    <div className={PAGECONST.PRODUCTS_WAPPER_C} key={product.name} >
+                <LazyLoad key={product.name} height={200} placeholder={(<span>niki</span>)} offset={100}>
+                    <div className={PAGECONST.PRODUCTS_WAPPER_C}  >
                         <div className={PAGECONST.PRODUCT_NAME_C}>{product.name}</div>
                         <div className={PAGECONST.PRODUCT_PRICE_C}>{product.price}</div>
                     </div>
@@ -36,13 +36,13 @@ export default class CartPage extends React.Component{
     buildRealtedProdcuts(){
         return this.realted_products.map(function(product, i){
             return (
-                <ReactCSSTransitionGroup
+                <ReactCSSTransitionGroup key={product.name}
                     transitionName={PAGECONST.APPER_C}
                     transitionAppear={true}
                     transitionAppearTimeout={500}
                     transitionEnterTimeout={0}
                     transitionLeaveTimeout={0}>
-                    <div className={PAGECONST.REALTEDPR_WAPPER_C} key={product.name} >
+                    <div className={PAGECONST.REALTEDPR_WAPPER_C}  >
                         <div className={PAGECONST.PRODUCT_NAME_C}>{product.name}</div>
                         <div className={PAGECONST.PRODUCT_PRICE_C}>{product.price}</div>
                     </div>
