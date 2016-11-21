@@ -1,35 +1,54 @@
 import React from "react";
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import LazyLoad from 'react-lazyload';
+
 import func from "../../globalFunctions";
+import '../../../css/animations.css';
+
+const PAGECONST = {
+    PRODUCTS_WAPPER_C   : 'pruducts',
+    REALTEDPR_WAPPER_C  : 'realted-products',
+    PRODUCT_NAME_C      : 'pr_name',
+    PRODUCT_PRICE_C     : 'pr_price',
+    APPER_C             : 'example2'
+}
 
 export default class CartPage extends React.Component{
     constructor(props){
         super(props);
+        this.products = this.props.products || [];
+        this.realted_products = this.props.related_products || [];
     }
 
-    buildProdcuts(){
-        const products = this.props.products || [];
-        const pr = products.map(function(product, i){
+    buildProdcuts(){ 
+        return this.products.map(function(product, i){
             return (
-                <div class="pruducts" key={product.name} >
-                    <div className="pr_name">{product.name}</div>
-                    <div className="pr_price">{product.price}</div>
-                </div>
+                <LazyLoad height={200} placeholder={(<span>niki</span>)} offset={100}>
+                    <div className={PAGECONST.PRODUCTS_WAPPER_C} key={product.name} >
+                        <div className={PAGECONST.PRODUCT_NAME_C}>{product.name}</div>
+                        <div className={PAGECONST.PRODUCT_PRICE_C}>{product.price}</div>
+                    </div>
+                </LazyLoad>
             )
         });
-        return pr;
     }
 
     buildRealtedProdcuts(){
-        const realted_products = this.props.related_products || [];
-        const pr = realted_products.map(function(product, i){
+        return this.realted_products.map(function(product, i){
             return (
-                <div class="realted-pruducts" key={product.name} >
-                    <div className="pr_name">{product.name}</div>
-                    <div className="pr_price">{product.price}</div>
-                </div>
+                <ReactCSSTransitionGroup
+                    transitionName={PAGECONST.APPER_C}
+                    transitionAppear={true}
+                    transitionAppearTimeout={500}
+                    transitionEnterTimeout={0}
+                    transitionLeaveTimeout={0}>
+                    <div className={PAGECONST.REALTEDPR_WAPPER_C} key={product.name} >
+                        <div className={PAGECONST.PRODUCT_NAME_C}>{product.name}</div>
+                        <div className={PAGECONST.PRODUCT_PRICE_C}>{product.price}</div>
+                    </div>
+                </ReactCSSTransitionGroup>
             )
         });
-        return pr;
     }
 
     render(){
