@@ -9,7 +9,12 @@ export default class CartPage extends React.Component{
     buildProdcutsStructure(){
         const products = this.props.products || [];
         const pr = products.map(function(product, i){
-            return (<div key={product.name} className="pr_name">{product.name}</div>)
+            return (
+                <div class="priducts" key={product.name} >
+                    <div className="pr_name">{product.name}</div>
+                    <div className="pr_price">{product.price}</div>
+                </div>
+            )
         });
         return pr;
     }

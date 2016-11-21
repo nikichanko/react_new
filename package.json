@@ -5,7 +5,8 @@
   "main": "webpack.config.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "./node_modules/.bin/webpack-dev-server --content-base src"
+    "dev": "./node_modules/.bin/webpack-dev-server --content-base src",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -27,6 +28,8 @@
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.3",
-    "webpack-dev-server": "^1.16.2"
+    "webpack-dev-middleware": "^1.8.4",
+    "webpack-dev-server": "^1.16.2",
+    "webpack-hot-middleware": "^2.13.2"
   }
 }
