@@ -3,9 +3,10 @@ var webpack = require('webpack');
 var path = require('path');
 
 //run prodcution -> NODE_ENV=production webpack
+//run webpack --watch to build full client.min.js
 
 module.exports = {
-  context: path.join(__dirname, "src"),
+  context: path.join(__dirname, "public"),
   devtool: debug ? "inline-sourcemap" : null,
   entry: "./js/client.js",
   module: {
@@ -22,12 +23,12 @@ module.exports = {
       {
         test: /\.s?css$/,
         loaders: ["style", "css", "sass"],
-        include: path.join(__dirname,'src')
+        include: path.join(__dirname,'public')
       }
     ]
   },
   output: {
-    path: __dirname + "/src/",
+    path: __dirname + "/public/",
     filename: "client.min.js"
   },
   plugins: debug ? [] : [

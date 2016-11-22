@@ -4,11 +4,11 @@ import func from "../../globalFunctions";
 export default class CartPage extends React.Component{
     constructor(props){
         super(props);
+        this.products = this.props.products || [];
     }
 
     buildProdcutsStructure(){
-        const products = this.props.products || [];
-        const pr = products.map(function(product, i){
+        return this.products.map(function(product, i){
             return (
                 <div class="priducts" key={product.name} >
                     <div className="pr_name">{product.name}</div>
@@ -16,7 +16,6 @@ export default class CartPage extends React.Component{
                 </div>
             )
         });
-        return pr;
     }
     render(){
         return(

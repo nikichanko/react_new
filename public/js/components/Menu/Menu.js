@@ -8,6 +8,8 @@ export default class Menu extends React.Component{
 
     buildExtraMenu(){
         const exptra_menu = this.props.extraMenu || [];
+
+
         const sub_menu = function(m){
             var submenu;
             if(m.submenu !== undefined && m.submenu.length){

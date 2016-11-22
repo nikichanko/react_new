@@ -5,25 +5,16 @@ const that = {
     createMarkup: function(html_str){
          return {__html: html_str}; 
     },
-    extend: function (defaults, options) {
-        this.defaults = defaults;
-        this.options = options;
-        this.buildExtended = function(){
-            var extended = {};
-            for (var prop in this.defaults) {
-                if (Object.prototype.hasOwnProperty.call(this.defaults, prop)) {
-                    extended[prop] = this.defaults[prop];
+    extend: function () {
+        let obj = {};
+        for (var i=0; i<arguments.length; i++) {
+        for (var key in arguments[i]) {
+                if (arguments[i].hasOwnProperty(key)) {
+                    obj[key] = arguments[i][key];
                 }
             }
-            for (var prop in this.options) {
-                if (Object.prototype.hasOwnProperty.call(this.options, prop)) {
-                    extended[prop] = this.options[prop];
-                }
-            }
-            return extended;
         }
-
-        return this.buildExtended();
+        return obj;
     },
     xmlhttpRequest: function (options) {
         const defaults = {
@@ -95,4 +86,20 @@ const that = {
         return bytes;
     }
 }
+/*
+Object.defineProperty(Object.prototype, "extend", {
+    enumerable: false,
+    value: function(from) {
+        var props = Object.getOwnPropertyNames(from);
+        var dest = this;
+        props.forEach(function(name) {
+            if (name in dest) {
+                var destination = Object.getOwnPropertyDescriptor(from, name);
+                Object.defineProperty(dest, name, destination);
+            }
+        });
+        return this;
+    }
+});
+*/
 module.exports = that;

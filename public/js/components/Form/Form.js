@@ -3,6 +3,15 @@ import func from "../../globalFunctions.js";
 
 import '../../../css/form.css';
 
+const PAGECONST = {
+    FIELD_C             : 'forminput',
+    FILED_ERROR_C       : 'error_input',
+    NOTVALIDATED_C      : 'notvalidated',
+    ACTIVE_C            : 'active',
+    FIELD_GROUP_C       : 'form_group'
+}
+
+
 export default class Form extends React.Component{
     constructor(props){
         super(props);
@@ -10,12 +19,12 @@ export default class Form extends React.Component{
         this.state = {state_fields: this.props.fields.map(function(field){
             return {
                 id: field.id, 
-                className:'forminput', 
-                classNameError: 'error_input', 
+                className: PAGECONST.FIELD_C, 
+                classNameError: PAGECONST.FILED_ERROR_C, 
                 value: field.value, 
                 isChecked: field.isChecked ? '1' : '0',
                 name: field.name,
-                validation_regex: (field.type === 'radio' || field.type === 'checkbox' || field.type === 'select') && field.validation_error !== undefined ? /^(?=.*1).{1}$/g : field.validation_regex,
+                validation_regex: (field.type === 'radio' || field.type === 'checkbox' || field.type === 'select') && field.validation_error !== undefined ? '/^(?=.*1).{1}$/g' : field.validation_regex,
                 validated: false,
                 type: field.type
             }
@@ -62,8 +71,8 @@ export default class Form extends React.Component{
                     not_validated_count -= field.length - 1;
                 for(var j=0; j<field.length - (is_valid_group ? 0 : 1); j++){
                     var inx = field[j].inx;
-                    state_fields[inx].className = state_fields[inx].className.replace('notvalidated','');
-                    state_fields[inx].classNameError = state_fields[inx].classNameError.replace('active','');
+                    state_fields[inx].className = state_fields[inx].className.replace(PAGECONST.NOTVALIDATED_C,'');
+                    state_fields[inx].classNameError = state_fields[inx].classNameError.replace(PAGECONST.ACTIVE_C,'');
                 }
             }
         }
@@ -103,21 +112,23 @@ export default class Form extends React.Component{
         }
         let classN = field.className.split(' ');
         let classNError = field.classNameError.split(' ');
-        const regex = new RegExp(field.validation_regex);
+
+        var match = field.validation_regex.match(new RegExp('^/(.*?)/([gimy]*)$'));
+        const regex = new RegExp(match[1], match[2]);
         const validated = regex.test(field.type === 'radio' || field.type === 'checkbox' || field.type === 'select'? field.isChecked : field.value);
 
-        if(!validated && classN.indexOf('notvalidated')===-1){
-            classN.push('notvalidated');
+        if(!validated && classN.indexOf(PAGECONST.NOTVALIDATED_C)===-1){
+            classN.push(PAGECONST.NOTVALIDATED_C);
         }
-        else if(validated && classN.indexOf('notvalidated')!==-1){
-            classN.splice(classN.indexOf('notvalidated'), 1);
+        else if(validated && classN.indexOf(PAGECONST.NOTVALIDATED_C)!==-1){
+            classN.splice(classN.indexOf(PAGECONST.NOTVALIDATED_C), 1);
         }
 
-        if(!validated && classNError.indexOf('active')===-1){
-            classNError.push('active');
+        if(!validated && classNError.indexOf(PAGECONST.ACTIVE_C)===-1){
+            classNError.push(PAGECONST.ACTIVE_C);
         }
-        else if(validated && classNError.indexOf('active')!==-1){
-            classNError.splice(classNError.indexOf('active'), 1);
+        else if(validated && classNError.indexOf(PAGECONST.ACTIVE_C)!==-1){
+            classNError.splice(classNError.indexOf(PAGECONST.ACTIVE_C), 1);
         }
 
         field.className = classN.join(' ');
@@ -145,8 +156,8 @@ export default class Form extends React.Component{
                 //group with same name radio input fields
                 if(f.isChecked === '1')
                     f.isChecked = '0';
-                f.className = f.className.replace('notvalidated','');
-                f.classNameError = f.classNameError.replace('active','');
+                f.className = f.className.replace(PAGECONST.NOTVALIDATED_C,'');
+                f.classNameError = f.classNameError.replace(PAGECONST.ACTIVE_C,'');
                 return f;
             }
         });
@@ -212,7 +223,7 @@ export default class Form extends React.Component{
                 }
             }
             if(group_fields.length && idx >= 0){
-                fields[idx] = (<Group key={'form_group'+group_names[i]} id={'form_group'+group_names[i]} className={'form_group '+group_names[i]} fields={group_fields}/>);
+                fields[idx] = (<Group key={PAGECONST.FIELD_GROUP_C + group_names[i]} id={PAGECONST.FIELD_GROUP_C + group_names[i]} className={PAGECONST.FIELD_GROUP_C + ' ' + group_names[i]} fields={group_fields}/>);
             }
         }
 

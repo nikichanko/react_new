@@ -7,7 +7,7 @@ import '../../../css/animations.css';
 
 const PAGECONST = {
     PRODUCTS_WAPPER_C   : 'pruducts',
-    REALTEDPR_WAPPER_C  : 'realted-products',
+    RELATED_WRAPPER_C   : 'realted-products',
     PRODUCT_NAME_C      : 'pr_name',
     PRODUCT_PRICE_C     : 'pr_price',
     APPER_C             : 'example2'
@@ -42,7 +42,7 @@ export default class CartPage extends React.Component{
                     transitionAppearTimeout={500}
                     transitionEnterTimeout={0}
                     transitionLeaveTimeout={0}>
-                    <div className={PAGECONST.REALTEDPR_WAPPER_C}  >
+                    <div className={PAGECONST.RELATED_WRAPPER_C}  >
                         <div className={PAGECONST.PRODUCT_NAME_C}>{product.name}</div>
                         <div className={PAGECONST.PRODUCT_PRICE_C}>{product.price}</div>
                     </div>
